@@ -1,0 +1,43 @@
+Import-Module ActiveDirectory
+
+$Password = ConvertTo-SecureString "MotDePasse123!" -AsPlainText -Force
+
+$Utilisateurs = @(
+    @{Prenom="Jean"; Nom="Dupont"; Service="Commercial"}
+    @{Prenom="Marie"; Nom="Martin"; Service="Commercial"}
+    @{Prenom="Paul"; Nom="Durand"; Service="Commercial"}
+    @{Prenom="Luc"; Nom="Petit"; Service="Commercial"}
+    @{Prenom="Emma"; Nom="Moreau"; Service="Commercial"}
+
+    @{Prenom="Sophie"; Nom="Bernard"; Service="Direction"}
+    @{Prenom="Thomas"; Nom="Robert"; Service="Direction"}
+    @{Prenom="Julie"; Nom="Richard"; Service="Direction"}
+    @{Prenom="Nicolas"; Nom="Simon"; Service="Direction"}
+    @{Prenom="Laura"; Nom="Michel"; Service="Direction"}
+
+    @{Prenom="Kevin"; Nom="Garcia"; Service="Tech"}
+    @{Prenom="Sarah"; Nom="David"; Service="Tech"}
+    @{Prenom="Lucas"; Nom="Roux"; Service="Tech"}
+    @{Prenom="Lea"; Nom="Fournier"; Service="Tech"}
+    @{Prenom="Hugo"; Nom="Girard"; Service="Tech"}
+)
+
+foreach ($User in $Utilisateurs)
+{
+    $Login = ($User.Prenom.Substring(0,1) + $User.Nom).ToLower()
+
+    $OU = "OU=$($User.Service),DC=entreprise,DC=local"
+
+    New-ADUser `
+        -Name "$($User.Prenom) $($User.Nom)" `
+        -DisplayName "$($User.Prenom) $($User.Nom)" `
+        -GivenName $User.Prenom `
+        -Surname $User.Nom `
+        -SamAccountName $Login `
+        -UserPrincipalName "$Login@entreprise.local" `
+        -EmailAddress "$Login@entreprise.local" `
+        -Path $OU `
+        -AccountPassword $Password `
+        -ChangePasswordAtLogon $true `
+        -Enabled $true
+}
