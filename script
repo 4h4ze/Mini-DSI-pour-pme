@@ -22,22 +22,21 @@ $Utilisateurs = @(
     @{Prenom="Hugo"; Nom="Girard"; Service="Tech"}
 )
 
+
 foreach ($User in $Utilisateurs)
 {
     $Login = ($User.Prenom.Substring(0,1) + $User.Nom).ToLower()
 
-    $OU = "OU=$($User.Service),DC=entreprise,DC=local"
+    $OU = "OU=$($User.Service),OU=OU,DC=entreprise,DC=local"
 
     New-ADUser `
         -Name "$($User.Prenom) $($User.Nom)" `
-        -DisplayName "$($User.Prenom) $($User.Nom)" `
         -GivenName $User.Prenom `
         -Surname $User.Nom `
         -SamAccountName $Login `
         -UserPrincipalName "$Login@entreprise.local" `
-        -EmailAddress "$Login@entreprise.local" `
         -Path $OU `
         -AccountPassword $Password `
-        -ChangePasswordAtLogon $true `
-        -Enabled $true
+        -Enabled $true `
+        -ChangePasswordAtLogon $true
 }
