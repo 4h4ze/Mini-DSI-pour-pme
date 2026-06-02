@@ -54,9 +54,9 @@
 
 ## Tiago — Administration Linux
 
-### Serveur Ubuntu
+### Serveur DEBIAN
 
-* Installation et configuration d'Ubuntu Server
+* Installation et configuration d'Debian Server
 * Configuration réseau statique
 * Mise à jour et sécurisation du système
 
