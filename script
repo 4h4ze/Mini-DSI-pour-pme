@@ -27,7 +27,7 @@ foreach ($User in $Utilisateurs)
 {
     $Login = ($User.Prenom.Substring(0,1) + $User.Nom).ToLower()
 
-    $OU = "OU=$($User.Service),OU=OU,DC=entreprise,DC=local"
+    $OU = "OU=$($User.Service),OU=UO,DC=entreprise,DC=local"
 
     New-ADUser `
         -Name "$($User.Prenom) $($User.Nom)" `
@@ -36,7 +36,7 @@ foreach ($User in $Utilisateurs)
         -SamAccountName $Login `
         -UserPrincipalName "$Login@entreprise.local" `
         -Path $OU `
-        -AccountPassword $Password `
+        -AccountPassword ($Password) `
         -Enabled $true `
         -ChangePasswordAtLogon $true
 }
