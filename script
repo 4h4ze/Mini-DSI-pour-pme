@@ -1,5 +1,3 @@
-Import-Module ActiveDirectory
-
 $Password = ConvertTo-SecureString "MotDePasse123!" -AsPlainText -Force
 
 $Utilisateurs = @(
