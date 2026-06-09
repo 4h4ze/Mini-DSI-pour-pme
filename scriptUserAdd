@@ -6,16 +6,16 @@ $Utilisateurs = @(
     @{Prenom="Paul"; Nom="Durand"; Service="Commercial"}
     @{Prenom="Luc"; Nom="Petit"; Service="Commercial"}
     @{Prenom="Emma"; Nom="Moreau"; Service="Commercial"}
+    @{Prenom="Kevin"; Nom="Garcia"; Service="Commercial"}
+    @{Prenom="Sarah"; Nom="David"; Service="Commercial"}
+    @{Prenom="Lucas"; Nom="Roux"; Service="Commercial"}
+    @{Prenom="Sophie"; Nom="Bernard"; Service="Commercial"}
+    @{Prenom="Thomas"; Nom="Robert"; Service="Commercial"}
 
-    @{Prenom="Sophie"; Nom="Bernard"; Service="Direction"}
-    @{Prenom="Thomas"; Nom="Robert"; Service="Direction"}
     @{Prenom="Julie"; Nom="Richard"; Service="Direction"}
     @{Prenom="Nicolas"; Nom="Simon"; Service="Direction"}
     @{Prenom="Laura"; Nom="Michel"; Service="Direction"}
 
-    @{Prenom="Kevin"; Nom="Garcia"; Service="Tech"}
-    @{Prenom="Sarah"; Nom="David"; Service="Tech"}
-    @{Prenom="Lucas"; Nom="Roux"; Service="Tech"}
     @{Prenom="Lea"; Nom="Fournier"; Service="Tech"}
     @{Prenom="Hugo"; Nom="Girard"; Service="Tech"}
 )
