@@ -54,9 +54,8 @@ $Utilisateurs = @(
     @{Prenom="Sarah"; Nom="David"; Service="Commercial"}
     @{Prenom="Lucas"; Nom="Roux"; Service="Commercial"}
     @{Prenom="Sophie"; Nom="Bernard"; Service="Commercial"}
+    @{Prenom="Thomas"; Nom="Robert"; Service="Commercial"}
 
-
-    @{Prenom="Thomas"; Nom="Robert"; Service="Direction"}
     @{Prenom="Julie"; Nom="Richard"; Service="Direction"}
     @{Prenom="Nicolas"; Nom="Simon"; Service="Direction"}
     @{Prenom="Laura"; Nom="Michel"; Service="Direction"}
