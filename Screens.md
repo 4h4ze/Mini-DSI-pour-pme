@@ -5,6 +5,10 @@ Une configuration théorique avec toutes les informations de configurations rés
 
 <img width="888" height="1160" alt="1Infra" src="https://github.com/user-attachments/assets/58366bf7-6648-4f88-8493-3dd20395c4cc" />
 
+
+<img width="769" height="559" alt="image" src="https://github.com/user-attachments/assets/840d733f-32a1-43f1-b108-2375332a74ec" />
+
+
 | Catégorie | Élément | Nom/Hôte | Valeur |
 |------------|----------|-----------|---------|
 | Domaine | Domaine AD | - | entreprise.local |
