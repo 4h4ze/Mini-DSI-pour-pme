@@ -9,38 +9,7 @@ Une configuration théorique avec toutes les informations de configurations rés
 <img width="769" height="559" alt="image" src="https://github.com/user-attachments/assets/840d733f-32a1-43f1-b108-2375332a74ec" />
 
 
-| Catégorie | Élément | Nom/Hôte | Valeur |
-|------------|----------|-----------|---------|
-| Domaine | Domaine AD | - | entreprise.local |
-| Réseau | Adresse réseau | - | 192.168.10.0/24 |
-| Réseau | Masque réseau | - | 255.255.255.0 |
-| Réseau | Passerelle par défaut | - | 192.168.10.254 |
-| GPO | Stratégie | - | MDP |
-| GPO | Stratégie | - | Fond_Ecran |
-| Serveur | Contrôleur de domaine | dc01 (Win-Serv) | AD DS, DNS, DHCP |
-| Serveur | Adresse IP | dc01 | 192.168.10.101 |
-| Serveur | Masque | dc01 | 255.255.255.0 |
-| Serveur | Passerelle | dc01 | 192.168.10.254 |
-| Serveur | DNS primaire | dc01 | 192.168.10.101 |
-| Client | Poste Windows | cli01 (Win-Cli) | Client du domaine |
-| Client | Adresse IP | cli01 | DHCP |
-| Client | Masque | cli01 | DHCP |
-| Client | Passerelle | cli01 | DHCP |
-| Client | DNS primaire | cli01 | 192.168.10.101 |
-| Serveur | Serveur Samba | fileserv01 (Ubu-Smb-Serv) | Partage de fichiers |
-| Serveur | Adresse IP | fileserv01 | 192.168.10.102 |
-| Serveur | Masque | fileserv01 | 255.255.255.0 |
-| Serveur | Passerelle | fileserv01 | 192.168.10.254 |
-| Serveur | DNS primaire | fileserv01 | 192.168.10.101 |
-| Serveur | Serveur de sauvegarde | backserv01 (Ubu-Back-Serv) | Sauvegarde |
-| Serveur | Adresse IP | backserv01 | 192.168.10.103 |
-| Serveur | Masque | backserv01 | 255.255.255.0 |
-| Serveur | Passerelle | backserv01 | 192.168.10.254 |
-| Serveur | DNS primaire | backserv01 | 192.168.10.101 |
-| Serveur | CPU | backserv01 | 1 vCPU |
-| Serveur | RAM | backserv01 | 2 Go |
-| Serveur | Disque | backserv01 | 25 Go |
-| Routeur | Adresse IP | Gateway | 192.168.10.254 |
+
 
 
 ---
