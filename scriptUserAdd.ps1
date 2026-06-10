@@ -116,43 +116,4 @@ foreach ($User in $Utilisateurs) {
 # =========================
 # EXPORT DU RAPPORT
 # =========================
-$Report | Export-Csv -Path ".\rapport_creation_users.csv" -NoTypeInformation -Encoding UTF8$Password = ConvertTo-SecureString "MotDePasse123!" -AsPlainText -Force
-
-$Utilisateurs = @(
-    @{Prenom="Jean"; Nom="Dupont"; Service="Commercial"}
-    @{Prenom="Marie"; Nom="Martin"; Service="Commercial"}
-    @{Prenom="Paul"; Nom="Durand"; Service="Commercial"}
-    @{Prenom="Luc"; Nom="Petit"; Service="Commercial"}
-    @{Prenom="Emma"; Nom="Moreau"; Service="Commercial"}
-    @{Prenom="Kevin"; Nom="Garcia"; Service="Commercial"}
-    @{Prenom="Sarah"; Nom="David"; Service="Commercial"}
-    @{Prenom="Lucas"; Nom="Roux"; Service="Commercial"}
-    @{Prenom="Sophie"; Nom="Bernard"; Service="Commercial"}
-    @{Prenom="Thomas"; Nom="Robert"; Service="Commercial"}
-
-    @{Prenom="Julie"; Nom="Richard"; Service="Direction"}
-    @{Prenom="Nicolas"; Nom="Simon"; Service="Direction"}
-    @{Prenom="Laura"; Nom="Michel"; Service="Direction"}
-
-    @{Prenom="Lea"; Nom="Fournier"; Service="Tech"}
-    @{Prenom="Hugo"; Nom="Girard"; Service="Tech"}
-)
-
-
-foreach ($User in $Utilisateurs)
-{
-    $Login = ($User.Prenom.Substring(0,1) + $User.Nom).ToLower()
-
-    $OU = "OU=$($User.Service),OU=UO,DC=entreprise,DC=local"
-
-    New-ADUser `
-        -Name "$($User.Prenom) $($User.Nom)" `
-        -GivenName $User.Prenom `
-        -Surname $User.Nom `
-        -SamAccountName $Login `
-        -UserPrincipalName "$Login@entreprise.local" `
-        -Path $OU `
-        -AccountPassword ($Password) `
-        -Enabled $true `
-        -ChangePasswordAtLogon $true
-}
+$Report | Export-Csv -Path ".\rapport_creation_users.csv" -NoTypeInformation -Encoding UTF8
