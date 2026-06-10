@@ -37,12 +37,6 @@
   * Fond d'écran d'entreprise
 * Vérification de l'application des stratégies sur le poste client
 
-### Sauvegarde Windows
-
-* Mise en place de Windows Server Backup (si retenu)
-* Sauvegarde des éléments Active Directory critiques
-* Documentation des procédures de sauvegarde et restauration Windows
-
 ### Documentation
 
 * Schéma Active Directory
@@ -54,9 +48,9 @@
 
 ## Tiago — Administration Linux
 
-### Serveur DEBIAN
+### Serveur Ubuntu
 
-* Installation et configuration d'Debian Server
+* Installation et configuration d'Ubuntu Server
 * Configuration réseau statique
 * Mise à jour et sécurisation du système
 
