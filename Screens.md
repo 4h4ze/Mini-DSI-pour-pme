@@ -189,9 +189,18 @@ Une installation basique de Ubuntu Server 24
 
 ### 4.2.1 Changer le nom du PC
 
+<img width="1201" height="928" alt="renommer (2)" src="https://github.com/user-attachments/assets/11bef16a-5715-4ec5-b165-a150fab10147" />
+<img width="1195" height="473" alt="renommer (1)" src="https://github.com/user-attachments/assets/e48fce28-cd81-4856-98c8-c799534893d5" />
+
 ### 4.2.2 Ajouter le PC au domaine + verifs ping
 
+<img width="402" height="478" alt="image" src="https://github.com/user-attachments/assets/2798aa00-8137-4f6d-9642-988679477d24" />
+<img width="1273" height="672" alt="image" src="https://github.com/user-attachments/assets/95fb122e-3a81-4219-848e-8055f2b60fc1" />
+
+
 ### 4.2.3 Authentification
+
+<img width="1002" height="937" alt="image" src="https://github.com/user-attachments/assets/809ceb6e-a2f0-4aa2-ac24-0f40620a8dbc" />
 
 
 # 5. Configuration des machines Linux
