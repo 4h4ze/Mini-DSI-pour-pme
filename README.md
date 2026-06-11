@@ -33,7 +33,7 @@ L'infrastructure mise en place reproduit les fonctions essentielles d'une Direct
 | Ubuntu Server          | Serveur de fichiers Samba                       |
 | Samba                  | Partage de fichiers intégré à Active Directory  |
 | SSH                    | Administration sécurisée du serveur Linux       |
-| rsync / Windows Backup | Sauvegarde des données                          |
+| rsync                  | Sauvegarde des données                          |
 
 ---
 
@@ -56,10 +56,11 @@ L'infrastructure mise en place reproduit les fonctions essentielles d'une Direct
 
 ```text
 Entreprise.local
-│
-├── Direction
-├── Tech
-└── Commercial
+|
+ENTREPRISE
+  ├── Direction
+  ├── Tech
+  └── Commercial
 ```
 
 ### Utilisateurs
@@ -131,7 +132,6 @@ Le serveur Ubuntu est intégré au domaine Active Directory via Samba.
 * Utilisation de :
 
   * `rsync` (Linux)
-  * ou `Windows Server Backup`
 
 ### Restauration
 
@@ -166,21 +166,11 @@ Le serveur Ubuntu est intégré au domaine Active Directory via Samba.
 
 ---
 
-## ✅ Contraintes respectées
-
-* [x] Minimum 4 machines virtuelles
-* [x] Active Directory fonctionnel
-* [x] DHCP et DNS opérationnels
-* [x] Samba intégré au domaine
-* [x] Permissions par service
-* [x] GPO de sécurité appliquées
-* [x] Sauvegarde automatisée
-* [x] Procédure de restauration validée
-* [x] SSH par clé uniquement
-* [x] Aucun mot de passe par défaut
-
----
-
 ## 📄 Auteur
 
 Projet réalisé dans le cadre d'un exercice d'administration systèmes et réseaux visant à reproduire l'infrastructure informatique complète d'une PME.
+Fait par :
+
+@Bo-Br : Responsable Windows Server
+
+@4h4ze : Responsable Linux Server
