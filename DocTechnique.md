@@ -26,6 +26,7 @@
 Étendue : 192.168.10.101 - 192.168.10.130
 
 Exclusion : 192.168.10.101 - 192.168.10.103 
+
     - 192.168.10.101 : AD/DNS/DHCP
     - 192.168.10.102 : File Server
     - 192.168.10.103 : Save Server
@@ -34,3 +35,4 @@ Exclusion : 192.168.10.101 - 192.168.10.103
 
 ## DNS
 
+<img width="769" height="126" alt="image" src="https://github.com/user-attachments/assets/fafeed9b-2459-48a8-b3ba-534e5d562e18" />
