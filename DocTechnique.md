@@ -22,3 +22,15 @@
 # 4. Conﬁguration des services 
 
 ## DHCP
+
+Étendue : 192.168.10.101 - 192.168.10.130
+
+Exclusion : 192.168.10.101 - 192.168.10.103 
+    - 192.168.10.101 : AD/DNS/DHCP
+    - 192.168.10.102 : File Server
+    - 192.168.10.103 : Save Server
+    
+<img width="725" height="164" alt="image" src="https://github.com/user-attachments/assets/aef00ff8-2141-422e-9a73-db5a80cf5152" />
+
+## DNS
+
