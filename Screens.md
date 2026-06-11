@@ -205,10 +205,12 @@ systemctl status smbd
 
 
 ### 2. Configurer le server SMB
+
 1. Editer le fichier de configuration
 ```bash
 nano /etc/samba/smb.conf
 ```
+
 ```conf
 [global]
    workgroup = ENTREPRISE
@@ -237,8 +239,11 @@ nano /etc/samba/smb.conf
    vfs objects = acl_xattr
    map acl inherit = yes
 ```
+
 ---
+
 ## 2. DNS
+
 ### 1. Installer le DNS
 
 1. Édite ta configuration Netplan :
@@ -264,6 +269,7 @@ network:
 ```bash
 sudo netplan apply
 ```
+
 ---
 
 ## 3. Winbind 
@@ -275,10 +281,12 @@ Installer les paquets :
 sudo apt update
 sudo apt install winbind libpam-winbind libnss-winbind krb5-user smbclient acl -y
 ```
+
 Joindre le domaine :
 ```bash
 sudo net ads join -U Administrateur -S 192.168.10.101
 ```
+
 Redémarre et active les services réseau :
 ```bash
 sudo systemctl restart smbd nmbd winbind && sudo systemctl enable smbd nmbd winbind
@@ -294,8 +302,8 @@ id [un_utilisateur_de_l_ad]   # Doit retourner un ID
 ```
 <img width="1920" height="1080" alt="4-join ad verif" src="https://github.com/user-attachments/assets/54297bea-fafd-44ea-b191-70bc8c74ddc4" />
 
-
 ---
+
 ## 4. SMB Config fichier /home 
 
 Pour forcer Ubuntu à créer automatiquement le dossier /home/ première connexion:
@@ -304,7 +312,6 @@ sudo pam-auth-update
 #Utilise les flèches pour descendre sur **"Create home directory on login",
 ```
 <img width="1920" height="1080" alt="5-home directory" src="https://github.com/user-attachments/assets/538a3b2e-e737-4559-b333-712e472a26a4" />
-
 
 Préparation de la partition G et des Répertoires
 ```bash
@@ -316,6 +323,7 @@ sudo mkdir -p /mnt/G/Direction && sudo mkdir -p /mnt/G/Technique && sudo mkdir -
 # Attribution des droits locaux maximaux (Samba se chargera du filtrage réseau)
 sudo chmod -R 777 /mnt/G/
 ```
+
 Configuration des Partages Réseau
 Ouvre le fichier de configuration Samba et ajoute ces blocs à la toute fin du fichier :
 ```bash
@@ -347,6 +355,7 @@ sudo nano /etc/samba/smb.conf
    valid users = @"gg_commercial"
    write list = @"gg_commercial"
 ```
+
 Applique les modifications en relançant le serveur SMB
 ```bash
 sudo systemctl restart smbd
@@ -381,8 +390,9 @@ sudo ssh-keygen -t ed25519 -N "" -f /root/.ssh/id_ed25519
     
 2. Déployer la clé publique sur la **VM SMB** :
 ```bash
-    sudo ssh-copy-id -i /root/.ssh/id_ed25519.pub fserv@192.168.10.102
+sudo ssh-copy-id -i /root/.ssh/id_ed25519.pub fserv@192.168.10.102
 ```
+
 ### 2. Script Automatique de Sauvegarde
 Le script est installé sur la **VM Backup** à l'emplacement
 `/usr/local/bin/backup_smb.sh`.
@@ -447,6 +457,7 @@ L'automatisation à **22h00** est gérée par le démon `cron` de la **VM Backup
 ```bash
 sudo crontab -e
 ```
+
 2. Insérer la directive horaire suivante :
 ```bash
 0 22 * * * /usr/local/bin/backup_smb.sh > /dev/null 2>&1
@@ -465,6 +476,7 @@ Résultat : SUCCÈS
 Taille transférée : 14G
 -------------------------------------------
 ```
+
 ## 6. PROCÉDURE DE RESTAURATION
 
 Ces commandes de secours s'exécutent depuis la **VM Backup** en tant que `root`.
