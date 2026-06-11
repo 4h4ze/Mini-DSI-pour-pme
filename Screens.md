@@ -174,48 +174,342 @@ Une installation basique de Ubuntu Server 24
 
 # 5. Configuration des machines Linux
 
+---
+
+## 1. SMB
+
+### 1. Installer le server SMB
+1. installation du paquet "samba" :
+```bash
+apt-get install -y samba
+```
+<img width="1920" height="1080" alt="1" src="https://github.com/user-attachments/assets/26c9e07f-a99a-42a4-9b67-15e9090c9162" />
+
+2. Afficher la version actuelle pour vérifier l’installation:
+```bash
+smbd --version
+```
+
+3. Afficher le statut du serveur Samba, et voir s'il est démarré ou arrêté
+```bash
+systemctl status smbd
+```
+<img width="1920" height="1080" alt="3" src="https://github.com/user-attachments/assets/dd90fd73-36e4-42cf-99ac-04cca71614e4" />
 
 
+4. Activer le démarrage automatique de Samba:
+```bash
+   systemctl enable smbd
+```
+<img width="1920" height="1080" alt="4" src="https://github.com/user-attachments/assets/5f0f7ca1-765d-4c85-9bf4-3ce17db6ef56" />
 
 
+### 2. Configurer le server SMB
+1. Editer le fichier de configuration
+```bash
+nano /etc/samba/smb.conf
+```
+```conf
+[global]
+   workgroup = ENTREPRISE
+   realm = ENTREPRISE.LOCAL
+   security = ads
+
+   # Configuration Winbind
+   winbind use default domain = yes
+   winbind enum users = yes
+   winbind enum groups = yes
+   winbind refresh tickets = yes
+
+   # Mapping des IDs (Chaque SID Windows devient un UID/GID Linux local)
+   idmap config * : backend = tdb
+   idmap config * : range = 3000-7999
+   idmap config ENTREPRISE : backend = rid
+   idmap config ENTREPRISE : range = 10000-999999
+
+   # Configuration des sessions et chemins
+   template shell = /bin/bash
+   template homedir = /mnt/G/Utilisateurs/%U
+   kerberos method = secrets and keytab
+   dedicated keytab file = /etc/krb5.keytab
+
+   # Support des permissions de sécurité étendues Windows (ACLs)
+   vfs objects = acl_xattr
+   map acl inherit = yes
+```
+---
+## 2. DNS
+### 1. Installer le DNS
+
+1. Édite ta configuration Netplan :
+```bash
+sudo nano /etc/netplan/00-installer-config.yaml
+```
+
+2. Déclarer le server DHCP et le domaine AD:
+```bash
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens18:
+      dhcp4: 
+      addresses: - 192.168.10.103/24 
+      nameservers:
+        addresses: [192.168.10.101]
+        search: [entreprise.local]
+```
+
+3. Appliquer les modification DNS:
+```bash
+sudo netplan apply
+```
+---
+
+## 3. Winbind 
+
+### 1. Joindre Ubuntu au domaine AD
+
+Installer les paquets :
+```bash
+sudo apt update
+sudo apt install winbind libpam-winbind libnss-winbind krb5-user smbclient acl -y
+```
+Joindre le domaine :
+```bash
+sudo net ads join -U Administrateur -S 192.168.10.101
+```
+Redémarre et active les services réseau :
+```bash
+sudo systemctl restart smbd nmbd winbind && sudo systemctl enable smbd nmbd winbind
+```
+<img width="1920" height="1080" alt="3-join ad" src="https://github.com/user-attachments/assets/915b96ba-c9ca-423e-a6e9-67748d4e3804" />
 
 
-# 6.
+Vérifier :
+```bash
+wbinfo -u      # Pour lister tous tes utilisateurs AD
+wbinfo -g      # Pour lister tous tes groupes AD (Direction, Technique, Commercial...)
+id [un_utilisateur_de_l_ad]   # Doit retourner un ID
+```
+<img width="1920" height="1080" alt="4-join ad verif" src="https://github.com/user-attachments/assets/54297bea-fafd-44ea-b191-70bc8c74ddc4" />
 
 
+---
+## 4. SMB Config fichier /home 
+
+Pour forcer Ubuntu à créer automatiquement le dossier /home/ première connexion:
+```bash
+sudo pam-auth-update
+#Utilise les flèches pour descendre sur **"Create home directory on login",
+```
+<img width="1920" height="1080" alt="5-home directory" src="https://github.com/user-attachments/assets/538a3b2e-e737-4559-b333-712e472a26a4" />
 
 
+Préparation de la partition G et des Répertoires
+```bash
+sudo mkdir -p /mnt/G/Direction && sudo mkdir -p /mnt/G/Technique && sudo mkdir -p /mnt/G/Commercial
+
+<img width="1920" height="1080" alt="6-création dir partagé" src="https://github.com/user-attachments/assets/86b0f2e6-231e-4936-9bcc-e857c2c0623d" />
 
 
+# Attribution des droits locaux maximaux (Samba se chargera du filtrage réseau)
+sudo chmod -R 777 /mnt/G/
+```
+Configuration des Partages Réseau
+Ouvre le fichier de configuration Samba et ajoute ces blocs à la toute fin du fichier :
+```bash
+sudo nano /etc/samba/smb.conf
+```
+```bash
+[Direction]
+   comment = Partage Direction
+   path = /mnt/G/Direction
+   browseable = yes
+   read only = no
+   valid users = @"gg_direction"
+   write list = @"gg_direction"
+
+[Technique]
+   comment = Partage Technique
+   path = /mnt/G/Technique
+   browseable = yes
+   read only = no
+   valid users = @"gg_technique", @"gg_direction"
+   write list = @"gg_technique"
+   read list = @"gg_direction"
+
+[Commercial]
+   comment = Partage Commercial
+   path = /mnt/G/Commercial
+   browseable = yes
+   read only = no
+   valid users = @"gg_commercial"
+   write list = @"gg_commercial"
+```
+Applique les modifications en relançant le serveur SMB
+```bash
+sudo systemctl restart smbd
+```
+<img width="1920" height="1080" alt="verif dir win-cli" src="https://github.com/user-attachments/assets/27885436-e9f8-4887-b7ec-78a3431a0944" />
+
+---
+
+## 5. Configuration du server Backup (*rsync / cron*)
+
+### 1. Réseau et Sécurité
+
+#### A. Autorisation `rsync` sans mot de passe (Sur la VM SMB)
+Pour que la sauvegarde s'exécute de nuit sans intervention humaine, l'utilisateur `fserv` doit pouvoir exécuter `rsync` avec les privilèges d'administration sans que le système ne réclame de mot de passe.
+
+1. Exécuter la commande suivante sur la **VM SMB** :
+```bash
+sudo visudo
+```
+    
+2. Ajouter cette ligne tout à la fin du fichier, puis sauvegarder :
+```bash
+fserv ALL=(ALL) NOPASSWD: /usr/bin/rsync
+```    
+#### B. Échange de clés SSH (Depuis la VM Backup)
+Le script utilise une clé SSH pour s'authentifier de manière sécurisée.
+
+1. Générer la paire de clés sur la **VM Backup** :
+```bash
+sudo ssh-keygen -t ed25519 -N "" -f /root/.ssh/id_ed25519
+```
+    
+2. Déployer la clé publique sur la **VM SMB** :
+```bash
+    sudo ssh-copy-id -i /root/.ssh/id_ed25519.pub fserv@192.168.10.102
+```
+### 2. Script Automatique de Sauvegarde
+Le script est installé sur la **VM Backup** à l'emplacement
+`/usr/local/bin/backup_smb.sh`.
+```bash
+#!/bin/bash
+
+# --- CONFIGURATION ---
+SMB_IP="192.168.10.102"
+SSH_USER="root"
+TARGET_DIR="/sauvegardes/smb_server"
+LOG_FILE="/var/log/backup_samba.log"
+
+# Périmètre exact (Sans dossier fantôme)
+SOURCES=(
+    "/home"
+    "/mnt/G"            # Contient Commercial, Direction, Technique
+    "/etc/netplan"
+    "/etc/samba"
+)
+
+DATE=$(date +%d-%m-%Y)
+ERROR_FLAG=0
+
+mkdir -p "$TARGET_DIR/$DATE"
+
+# --- EXÉCUTION ---
+for SRC in "${SOURCES[@]}"; do
+    # Connexion directe en root sans sudo distant
+    rsync -az -e "ssh -o StrictHostKeyChecking=no" $SSH_USER@$SMB_IP:"$SRC" "$TARGET_DIR/$DATE/" 2>/dev/null
+    
+    if [ $? -ne 0 ]; then
+        ERROR_FLAG=1
+    fi
+done
+
+# --- INTERPRÉTATION & LOGS ---
+TAILLE_LISIBLE=$(du -sh "$TARGET_DIR/$DATE" | awk '{print $1}')
+HEURE_FIN=$(date +%H:%M:%S)
+
+echo "-------------------------------------------" >> $LOG_FILE
+echo "Date : $DATE" >> $LOG_FILE
+echo "Heure : $HEURE_FIN" >> $LOG_FILE
+if [ $ERROR_FLAG -eq 0 ]; then
+    echo "Résultat : SUCCÈS" >> $LOG_FILE
+else
+    echo "Résultat : ÉCHEC" >> $LOG_FILE
+fi
+echo "Taille transférée : $TAILLE_LISIBLE" >> $LOG_FILE
+echo "-------------------------------------------" >> $LOG_FILE
+```
+
+#### Activation du script :
+Pour rendre le script opérationnel, les droits d'exécution lui sont attribués :
+```bash
+sudo chmod +x /usr/local/bin/backup_smb.sh
+```
+
+### 3. Planification de la tâche (`cron`)
+
+L'automatisation à **22h00** est gérée par le démon `cron` de la **VM Backup**.
+1. Ouvrir le planificateur de tâches en tant qu'administrateur :
+```bash
+sudo crontab -e
+```
+2. Insérer la directive horaire suivante :
+```bash
+0 22 * * * /usr/local/bin/backup_smb.sh > /dev/null 2>&1
+```
+<img width="1920" height="1080" alt="crontab conf" src="https://github.com/user-attachments/assets/606e7709-34d8-4297-a2eb-1719c0dc64f9" />
 
 
+### 4. Structure des Logs Générés
 
-# 7.
+Chaque exécution écrit un rapport normé dans `/var/log/backup_samba.log` :
+```bash
+-------------------------------------------
+Date : 10-06-2026
+Heure : 22:04:12
+Résultat : SUCCÈS
+Taille transférée : 14G
+-------------------------------------------
+```
+## 6. PROCÉDURE DE RESTAURATION
+
+Ces commandes de secours s'exécutent depuis la **VM Backup** en tant que `root`.
+
+- **Fichier unique :**
+```bash
+rsync -az -e ssh /sauvegardes/smb_server/10-06-2026/G/Technique/verif.txt root@192.168.10.102:/mnt/G/Technique/
+```
+    
+- **Dossier / Partage spécifique :**
+```bash
+rsync -az -e ssh /sauvegardes/smb_server/10-06-2026/G/Commercial root@192.168.10.102:/mnt/G/
+```
+    
+- **Partage complet (`/mnt/G`) :**
+```bash
+rsync -az --delete -e ssh /sauvegardes/smb_server/10-06-2026/G/ root@192.168.10.102:/mnt/G/
+```
+
+## 7. PROTOCOLE DE TEST DE RESTAURATION 
+
+### Étape 1 : Sabotage volontaire (Sur la VM SMB)
+
+```bash
+sudo rm -rf /mnt/G/Direction
+```
+_Le partage "Direction" est instantanément indisponible pour les utilisateurs._
 
 
+### Étape 2 : Restauration et Chronométrage (Depuis la VM Backup)
+
+La commande `time` va calculer la vitesse de reconstruction du partage.
+
+```bash
+time rsync -az -e ssh /sauvegardes/smb_server/11-06-2026/G/ root@192.168.10.102:/mnt/G/
+```
+Suivre scrupuleusement ces 3 étapes devant l'évaluateur pour valider le livrable.
+
+### Étape 3 : Vérification du retour à la normale (Sur la VM SMB)
+
+```bash
+ls -l /mnt/G/Direction
+```
+
+_Le contenu réapparaît avec les permissions d'origine intactes._
 
 
-
-
-
-
-
-# 8.
-
-
-
-
-
-
-
-
-# 9.
-
-
-
-
-
-
-
-# 10.
 
