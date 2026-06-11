@@ -258,8 +258,11 @@ network:
   renderer: networkd
   ethernets:
     ens18:
-      dhcp4: 
-      addresses: - 192.168.10.103/24 
+      addresses:
+         - 192.168.10.103/24
+      routes:
+         - to: default
+           via: 192.168.10.102.254
       nameservers:
         addresses: [192.168.10.101]
         search: [entreprise.local]
